@@ -1,0 +1,81 @@
+﻿@model Ecommerce.Web.Models.CategoryViewModel
+
+@{
+    ViewData["Title"] = "Kategori Ekle";
+}
+
+@section Styles
+{
+
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0"> Kategori Ekle</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-asp-controller="Home">Kategoriler</a></li>
+                        <li class="breadcrumb-item"><a asp-action="Add" asp-asp-controller="Category">Kategori</a></li>
+                        <li class="breadcrumb-item active">Ekle</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    @await Component.InvokeAsync("BaseValidation", Model)
+                    <div class="card card-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">Kategori Formu</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <form class="form-horizontal" asp-action="Add" asp-controller="Category" method="post">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!-- text input -->
+                                        <div class="form-group">
+                                            <label>Kategori Adı</label>
+                                            <input type="text" asp-for="@Model.Category.Name" class="form-control" placeholder="Yeni kategori giriniz." required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!-- textarea -->
+                                        <div class="form-group">
+                                            <label>Açıklama</label>
+                                            <textarea class="form-control" rows="3" asp-for="@Model.Category.Description" placeholder="Açıklama yazınız." required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <a class="btn btn-sm btn-default float-left" asp-action="Index" asp-controller="Category"><i class='fa fa-times' aria-hidden='true'></i> İptal</a>
+                                <button type="submit" class="btn btn-sm btn-info float-right"><i class="fa fa-save"></i> Kaydet</button>
+                            </div>
+                            <!-- /.card-footer -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts
+{
+
+}

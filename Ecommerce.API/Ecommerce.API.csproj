@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="1.1.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ecommerce.BL\Ecommerce.BL.csproj" />
+    <ProjectReference Include="..\Ecommerce.DAL\Ecommerce.DAL.csproj" />
+    <ProjectReference Include="..\Ecommerce.DTO\Ecommerce.DTO.csproj" />
+  </ItemGroup>
+
+</Project>

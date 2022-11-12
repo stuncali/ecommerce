@@ -1,0 +1,214 @@
+﻿@{
+    ViewData["Title"] = "Sepete Ekle";
+}
+
+
+@section Styles
+{
+    <link rel="stylesheet" href="@Url.Content("~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css")" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css")" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css")" type="text/css">
+}
+
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0"> Sepete Ürün Ekle</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Sepet</a></li>
+                        <li class="breadcrumb-item active">Ürün Ekle</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Ürün Sepeti</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="tblCart" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Adı</th>
+                                        <th>Adet</th>
+                                        <th>Birim Fiyatı</th>
+                                        <th>Ücreti</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <div class="float-right"><span style='font-weight:bold'>Toplam:</span>&nbsp;<span class="float-right" id="totalPrice" name="totalPrice">0 TL</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Ürünler</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="tblProduct" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Adı</th>
+                                        <th>Kategori</th>
+                                        <th>Fiyatı</th>
+                                        <th>Stok</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+</div>
+
+@section Scripts
+    {
+    <script src="@Url.Content("~/plugins/datatables/jquery.dataTables.min.js")" type="text/javascript">></script>
+    <script src="@Url.Content("~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js")" type="text/javascript">></script>
+    <script src="@Url.Content("~/plugins/datatables-responsive/js/dataTables.responsive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/plugins/datatables-buttons/js/dataTables.buttons.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        var tblCart = $('#tblCart').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "retrieve": true,
+                "responsive": true,
+                "oLanguage": {
+                    "sEmptyTable": "Tabloda veri yok"
+                },
+                "ajax": {
+                    "url": "@Url.Action("ShowCart","Cart"," new { Area='' }")",
+                    "dataType": "json",
+                    "dataSrc": "data",
+                    "contentType": "application/json"
+                },
+                "columns": [
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "quantity", "name": "quantity", "autoWidth": true },
+                    { "data": "price", "name": "price", "autoWidth": true },
+                    { "data": "total", "name": "total", "autoWidth": true }                    
+                ]
+        });
+
+
+        var tblProduct = $('#tblProduct').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "retrieve": true,
+                "responsive": true,
+                "oLanguage": {
+                    "sEmptyTable": "Tabloda veri yok"
+                },
+                "ajax": {
+                    "url": "@(Startup.apiUrl)/api/Product",
+                    "dataType": "json",
+                    "dataSrc": "data",
+                    "contentType": "application/json"
+                },
+                "columns": [
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "category", "name": "category", "autoWidth": true },
+                    { "data": "price", "name": "price", "autoWidth": true },
+                    { "data": "stock", "name": "stock", "autoWidth": true },
+                    {
+                        "data": null,
+                        "bSortable": false,
+                        "mRender": function (o) {
+                        return '<a onclick="ControlToStock(' + o.id + ')" href=\'#\'> Sepete Ekle </a>';
+                        }
+                    }
+                ]
+        });
+
+       
+
+
+        function AddToCart(id){
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("AddToCart","Cart",new { Area="", id=""})' + '/' + id,
+                success: function (data) 
+                {                    
+                    if(data.result=="1")
+                    {
+                        tblCart.ajax.reload()
+                        tblProduct.ajax.reload();
+                        $("#totalPrice").text(data.total+' TL');
+                        toastr.success('Ürün sepetinize eklenmiştir.');
+                    }
+                    else
+                    {
+                        toastr.error('Ürün sepetinize eklenemiştir.');
+                    }
+                }
+            });
+        }
+
+
+        function ControlToStock(id)
+        {
+            $.ajax({
+                method: "GET",
+                url: '@(Startup.apiUrl)/api/Product/'+id,
+                success: function (data) 
+                {
+                    if(data=="1")
+                    {
+                        AddToCart(id);
+                    }
+                    else
+                    {
+                        toastr.warning('Ürün stokta olmadığında sepete eklenememiştir.');
+                    }
+                }
+            });
+        }
+    
+        $(document).ready(function ()       
+        {
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetTotal","Cart",new { Area="", id=""})',
+                success: function (data) {
+                    $("#totalPrice").text(data + ' TL');
+                }
+            });
+        });
+
+
+    </script>
+}
